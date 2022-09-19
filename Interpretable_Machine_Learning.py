@@ -35,13 +35,6 @@ from sklearn.metrics import confusion_matrix
 
 # COMMAND ----------
 
-import os
-
-if not os.path.isdir('images'):
-    os.mkdir('images')
-
-# COMMAND ----------
-
 # MAGIC %md
 # MAGIC Print out module versions
 
@@ -86,9 +79,27 @@ print_module_version(sm)
 
 # COMMAND ----------
 
-insurance = pd.read_csv('health_data/insurance.csv')
+# File location and type
+file_location = "/FileStore/tables/insurance.csv"
+file_type = "csv"
+
+# CSV options
+infer_schema = "true"
+first_row_is_header = "true"
+delimiter = ","
+
+# The applied options are for CSV files. For other file types, these will be ignored.
+insurance = spark.read.format(file_type) \
+  .option("inferSchema", infer_schema) \
+  .option("header", first_row_is_header) \
+  .option("sep", delimiter) \
+  .load(file_location)
+
+display(insurance)
 
 # COMMAND ----------
+
+insurance = insurance.toPandas()
 
 insurance.shape
 
@@ -222,7 +233,7 @@ X_train, X_test, y_train, y_test = train_test_split(X,
 
 # COMMAND ----------
 
-
+x = 10
 
 # COMMAND ----------
 
@@ -266,7 +277,7 @@ reg.score(X_train, y_train)
 
 # COMMAND ----------
 
-reg.score(X_test, y_test)
+reg.score(X_all_test, y_all_test)
 
 # COMMAND ----------
 
